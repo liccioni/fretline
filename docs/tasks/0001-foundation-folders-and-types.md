@@ -14,9 +14,9 @@ Create the initial `src` folder structure and TypeScript domain types per the sp
   - Runtime runner logic or audio.
 
 ## Acceptance Criteria
-- [ ] Folder structure exists under `src/` to support upcoming features.
-- [ ] Type definitions match the spec fields and constraints.
-- [ ] `beatsPerBar` default handling is specified (e.g., in a factory or UI defaults).
+- [x] Folder structure exists under `src/` to support upcoming features.
+- [x] Type definitions match the spec fields and constraints.
+- [x] `beatsPerBar` default handling is specified (e.g., in a factory or UI defaults).
 
 ## Files
 - Create:
@@ -36,3 +36,9 @@ Create the initial `src` folder structure and TypeScript domain types per the sp
 - Do not add new dependencies
 - Do not refactor unrelated code
 - Keep tests passing (`npm test`)
+
+## Completion
+
+- Status: Complete
+- Completed date: 2026-01-30
+- Summary: Folder structure created, drill/session TypeScript models added, DEFAULT_BEATS_PER_BAR defined.
