@@ -15,11 +15,11 @@ Implement a SessionRunner that runs a session made of Generic drills using `dura
   - Advanced UI polish beyond basic runner display.
 
 ## Acceptance Criteria
-- [ ] Runner starts only after explicit user action.
-- [ ] Countdown is visible for 3 seconds before the first drill.
-- [ ] Remaining time updates per second and transitions are automatic.
-- [ ] Metronome click aligns with BPM and downbeat is accented.
-- [ ] Session ends in a clear complete state.
+- [x] Runner starts only after explicit user action.
+- [x] Countdown is visible for 3 seconds before the first drill.
+- [x] Remaining time updates per second and transitions are automatic.
+- [x] Metronome click aligns with BPM and downbeat is accented.
+- [x] Session ends in a clear complete state.
 
 ## Files
 - Create:
@@ -33,3 +33,8 @@ Implement a SessionRunner that runs a session made of Generic drills using `dura
 - Do not add new dependencies
 - Do not refactor unrelated code
 - Keep tests passing (`npm test`)
+
+## Completion
+- Status: Complete
+- Completed date: 2026-01-30
+- Summary: Implemented runtime runner with countdown + transitions, WebAudio metronome with accented downbeat, runner screen UI, and App wiring with hardcoded session.
