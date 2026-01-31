@@ -18,23 +18,23 @@ Implement the Session Builder screen to construct a Session in memory, supportin
   - UI polish beyond basic functional layout.
 
 ## Acceptance Criteria
-- [ ] User can set Session name.
-- [ ] User can add a Generic drill by providing:
+- [x] User can set Session name.
+- [x] User can add a Generic drill by providing:
       - name
       - durationSeconds
       - metronome.bpm
       - metronome.beatsPerBar (defaults to 4 if omitted)
-- [ ] User can edit an existing drill’s fields.
-- [ ] User can reorder drills (up/down controls acceptable).
-- [ ] User can remove drills.
-- [ ] Total session duration is displayed as the sum of drill durations.
-- [ ] Invalid drills are blocked with inline validation (at minimum):
+- [x] User can edit an existing drill’s fields.
+- [x] User can reorder drills (up/down controls acceptable).
+- [x] User can remove drills.
+- [x] Total session duration is displayed as the sum of drill durations.
+- [x] Invalid drills are blocked with inline validation (at minimum):
       - Session name non-empty
       - Drill name non-empty
       - durationSeconds > 0
       - bpm > 0
       - beatsPerBar > 0 (or defaulted to 4)
-- [ ] Builder produces a valid in-memory `Session` object and exposes it via a callback prop (e.g., `onRun(session)`), without implementing navigation.
+- [x] Builder produces a valid in-memory `Session` object and exposes it via a callback prop (e.g., `onRun(session)`), without implementing navigation.
 
 ## Files
 - Create:
@@ -56,3 +56,8 @@ Implement the Session Builder screen to construct a Session in memory, supportin
 ## Definition of Done
 - All Acceptance Criteria checked.
 - No features beyond v1 spec.
+
+## Completion
+- Status: Complete
+- Completed date: 2026-01-30
+- Summary: Implemented in-memory Session Builder for Generic drills with add/edit/reorder/remove, inline validation, defaults, and App wiring.
