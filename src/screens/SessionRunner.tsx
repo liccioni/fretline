@@ -7,6 +7,7 @@ import { SessionRunner, type SessionRunnerState } from "../runtime/sessionRunner
 
 interface SessionRunnerProps {
   session: Session;
+  onExit?: () => void;
 }
 
 const initialState: SessionRunnerState = {
@@ -36,7 +37,10 @@ function getProgressPercent(drill: BaseDrill | null, remainingSeconds: number | 
   return Math.min(100, Math.max(0, (elapsed / drill.durationSeconds) * 100));
 }
 
-export function SessionRunnerScreen({ session }: SessionRunnerProps): JSX.Element {
+export function SessionRunnerScreen({
+  session,
+  onExit,
+}: SessionRunnerProps): JSX.Element {
   const runner = useMemo(() => new SessionRunner(session), [session]);
   const [state, setState] = useState<SessionRunnerState>(initialState);
   const [beat, setBeat] = useState<number | null>(null);
@@ -143,6 +147,9 @@ export function SessionRunnerScreen({ session }: SessionRunnerProps): JSX.Elemen
       {state.phase === "completed" && (
         <div>
           <p>Session complete.</p>
+          <button type="button" onClick={() => onExit?.()}>
+            Back to Builder
+          </button>
         </div>
       )}
     </div>
