@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import type { GenericDrill } from "../models/drills";
+import type { Drill, GenericDrill } from "../models/drills";
 import type { Session } from "../models/session";
 import { DEFAULT_BEATS_PER_BAR } from "../models/defaults";
 import { createId } from "../utils/ids";
@@ -20,14 +20,14 @@ export function SessionBuilder({
 }: SessionBuilderProps): JSX.Element {
   const [sessionId, setSessionId] = useState<string | null>(null);
   const [sessionName, setSessionName] = useState("");
-  const [drills, setDrills] = useState<GenericDrill[]>([]);
+  const [drills, setDrills] = useState<Drill[]>([]);
   const [errors, setErrors] = useState<string[]>([]);
 
   useEffect(() => {
     if (initialSession) {
       setSessionId(initialSession.id);
       setSessionName(initialSession.name);
-      setDrills(initialSession.drills as GenericDrill[]);
+      setDrills(initialSession.drills);
       setErrors([]);
       return;
     }
@@ -105,11 +105,14 @@ export function SessionBuilder({
     setDrills(
       drills.map((drill, drillIndex) =>
         drillIndex === index
-          ? { ...nextDrill, id: drills[index].id, type: drills[index].type }
+          ? { ...nextDrill, id: drills[index].id, type: "generic" }
           : drill
       )
     );
   };
+
+  const isGenericDrill = (drill: Drill): drill is GenericDrill =>
+    drill.type === "generic";
 
   const buildSession = (): Session => ({
     id: sessionId ?? createId("session"),
@@ -186,15 +189,27 @@ export function SessionBuilder({
         <h2>Drills</h2>
         {drills.length === 0 && <p>No drills added yet.</p>}
         {drills.map((drill, index) => (
-          <DrillEditor
-            key={drill.id}
-            drill={drill}
-            errors={drillErrors[index] ?? {}}
-            onChange={(nextDrill) => updateDrill(index, nextDrill)}
-            onMoveUp={() => moveDrill(index, "up")}
-            onMoveDown={() => moveDrill(index, "down")}
-            onRemove={() => removeDrill(index)}
-          />
+          isGenericDrill(drill) ? (
+            <DrillEditor
+              key={drill.id}
+              drill={drill}
+              errors={drillErrors[index] ?? {}}
+              onChange={(nextDrill) => updateDrill(index, nextDrill)}
+              onMoveUp={() => moveDrill(index, "up")}
+              onMoveDown={() => moveDrill(index, "down")}
+              onRemove={() => removeDrill(index)}
+            />
+          ) : (
+            <div key={drill.id}>
+              <div>
+                <strong>{drill.name || "Untitled Drill"}</strong>
+              </div>
+              <div>Type: {drill.type}</div>
+              <div>Duration: {drill.durationSeconds}s</div>
+              <div>BPM: {drill.metronome.bpm}</div>
+              <div>Read-only in this step.</div>
+            </div>
+          )
         ))}
         <button type="button" onClick={addDrill}>
           Add Drill
