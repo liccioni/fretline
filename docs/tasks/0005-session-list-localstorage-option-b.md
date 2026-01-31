@@ -48,13 +48,13 @@ Implement a minimal Session List screen and localStorage persistence for session
   - Must work with the Task 0004 builder → runner flow, without routing libraries
 
 ## Acceptance Criteria
-- [ ] Sessions persist across reloads using localStorage
-- [ ] Session List shows all saved sessions
-- [ ] User can create, edit, delete sessions from Session List
-- [ ] Option B: stored data structure can represent all drill types in the spec (full union)
-- [ ] App does not crash when localStorage is empty or contains malformed/unexpected data
-- [ ] No routing libraries introduced
-- [ ] Runner still runs start-to-finish without user interaction once started
+- [x] Sessions persist across reloads using localStorage
+- [x] Session List shows all saved sessions
+- [x] User can create, edit, delete sessions from Session List
+- [x] Option B: stored data structure can represent all drill types in the spec (full union)
+- [x] App does not crash when localStorage is empty or contains malformed/unexpected data
+- [x] No routing libraries introduced
+- [x] Runner still runs start-to-finish without user interaction once started
 
 ## Implementation Notes
 - Prefer a small storage module (e.g., `src/storage/sessions.ts`) if consistent with repo patterns.
@@ -62,3 +62,8 @@ Implement a minimal Session List screen and localStorage persistence for session
 
 ## Deliverables
 - The new markdown task file in `docs/tasks/`
+
+## Completion
+- Status: Complete
+- Completed date: 2026-01-30
+- Summary: Session List implemented with localStorage persistence using Option B; sessions load safely on startup, persist on save/run/delete, and support the full Drill union without routing or mid-session interruption.

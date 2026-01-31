@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import type { GenericDrill } from "../models/drills";
 import type { Session } from "../models/session";
 import { DEFAULT_BEATS_PER_BAR } from "../models/defaults";
@@ -6,13 +6,37 @@ import { createId } from "../utils/ids";
 import { DrillEditor, type DrillEditorErrors } from "../components/DrillEditor";
 
 interface SessionBuilderProps {
+  initialSession?: Session | null;
   onRun?: (session: Session) => void;
+  onSave?: (session: Session) => void;
+  onCancel?: () => void;
 }
 
-export function SessionBuilder({ onRun }: SessionBuilderProps): JSX.Element {
+export function SessionBuilder({
+  initialSession,
+  onRun,
+  onSave,
+  onCancel,
+}: SessionBuilderProps): JSX.Element {
+  const [sessionId, setSessionId] = useState<string | null>(null);
   const [sessionName, setSessionName] = useState("");
   const [drills, setDrills] = useState<GenericDrill[]>([]);
   const [errors, setErrors] = useState<string[]>([]);
+
+  useEffect(() => {
+    if (initialSession) {
+      setSessionId(initialSession.id);
+      setSessionName(initialSession.name);
+      setDrills(initialSession.drills as GenericDrill[]);
+      setErrors([]);
+      return;
+    }
+
+    setSessionId(createId("session"));
+    setSessionName("");
+    setDrills([]);
+    setErrors([]);
+  }, [initialSession]);
 
   const totalDuration = useMemo(() => {
     return drills.reduce((sum, drill) => sum + drill.durationSeconds, 0);
@@ -87,6 +111,12 @@ export function SessionBuilder({ onRun }: SessionBuilderProps): JSX.Element {
     );
   };
 
+  const buildSession = (): Session => ({
+    id: sessionId ?? createId("session"),
+    name: sessionName.trim(),
+    drills,
+  });
+
   const handleRun = () => {
     if (!sessionName.trim()) {
       setErrors(["Session name is required."]);
@@ -108,12 +138,31 @@ export function SessionBuilder({ onRun }: SessionBuilderProps): JSX.Element {
     }
 
     setErrors([]);
-    const session: Session = {
-      id: createId("session"),
-      name: sessionName.trim(),
-      drills,
-    };
-    onRun?.(session);
+    onRun?.(buildSession());
+  };
+
+  const handleSave = () => {
+    if (!sessionName.trim()) {
+      setErrors(["Session name is required."]);
+      return;
+    }
+
+    const drillErrorMessages = drillErrors.flatMap((error, index) => {
+      const messages: string[] = [];
+      if (error.name) messages.push(`Drill ${index + 1}: ${error.name}`);
+      if (error.durationSeconds) messages.push(`Drill ${index + 1}: ${error.durationSeconds}`);
+      if (error.bpm) messages.push(`Drill ${index + 1}: ${error.bpm}`);
+      if (error.beatsPerBar) messages.push(`Drill ${index + 1}: ${error.beatsPerBar}`);
+      return messages;
+    });
+
+    if (drillErrorMessages.length > 0) {
+      setErrors(drillErrorMessages);
+      return;
+    }
+
+    setErrors([]);
+    onSave?.(buildSession());
   };
 
   return (
@@ -163,9 +212,19 @@ export function SessionBuilder({ onRun }: SessionBuilderProps): JSX.Element {
         </div>
       )}
 
-      <button type="button" onClick={handleRun} disabled={hasErrors}>
-        Run
-      </button>
+      <div>
+        {onCancel && (
+          <button type="button" onClick={onCancel}>
+            Back to Sessions
+          </button>
+        )}
+        <button type="button" onClick={handleSave} disabled={hasErrors}>
+          Save
+        </button>
+        <button type="button" onClick={handleRun} disabled={hasErrors}>
+          Run
+        </button>
+      </div>
     </div>
   );
 }
