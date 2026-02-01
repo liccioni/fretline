@@ -1,4 +1,5 @@
 import type {
+  BaseDrill,
   Drill,
   DrillType,
   GenericDrill,
@@ -18,17 +19,35 @@ interface DrillBaseOverrides {
   };
 }
 
-const buildBase = (id: string, overrides?: DrillBaseOverrides) => {
+type BaseFields = Omit<BaseDrill, "type">;
+
+// docs/spec-v1.md: beatsPerBar default is 4 (Drill base type)
+const DEFAULT_BPM = 80; // docs/spec-v1.md does not define default bpm
+const DEFAULT_DURATION_SECONDS = 60; // docs/spec-v1.md does not define default duration
+const DEFAULT_NAME = "New Drill"; // docs/spec-v1.md does not define default drill name
+const DEFAULT_NOTE = "C"; // docs/spec-v1.md does not define default note
+const DEFAULT_STRING = 1; // docs/spec-v1.md does not define default string
+const DEFAULT_FRET_RANGE: [number, number] = [1, 4]; // docs/spec-v1.md does not define default fret range
+const DEFAULT_PATTERN = "1234"; // docs/spec-v1.md does not define default spider pattern
+const DEFAULT_TRIAD_TYPE: TriadLocationDrill["triadType"] = "major"; // docs/spec-v1.md does not define default triad type
+const DEFAULT_STRING_SET: number[] = [1, 2, 3]; // docs/spec-v1.md does not define default string set
+const DEFAULT_KEY = "C"; // docs/spec-v1.md does not define default key
+
+const assertNever = (value: never): never => {
+  throw new Error(`Unhandled drill type: ${String(value)}`);
+};
+
+const buildBase = (id: string, overrides?: DrillBaseOverrides): BaseFields => {
   const metronome = {
-    bpm: overrides?.metronome?.bpm ?? 80,
+    bpm: overrides?.metronome?.bpm ?? DEFAULT_BPM,
     beatsPerBar:
       overrides?.metronome?.beatsPerBar ?? DEFAULT_BEATS_PER_BAR,
   };
 
   return {
     id,
-    name: overrides?.name ?? "New Drill",
-    durationSeconds: overrides?.durationSeconds ?? 60,
+    name: overrides?.name ?? DEFAULT_NAME,
+    durationSeconds: overrides?.durationSeconds ?? DEFAULT_DURATION_SECONDS,
     metronome,
   };
 };
@@ -41,9 +60,9 @@ export const createDrill = (type: DrillType): Drill => {
       const drill: NoteLocationDrill = {
         ...base,
         type: "note-location",
-        string: 1,
-        note: "C",
-        fretRange: [1, 4],
+        string: DEFAULT_STRING,
+        note: DEFAULT_NOTE,
+        fretRange: DEFAULT_FRET_RANGE,
       };
       return drill;
     }
@@ -51,9 +70,9 @@ export const createDrill = (type: DrillType): Drill => {
       const drill: TriadLocationDrill = {
         ...base,
         type: "triad-location",
-        triadType: "major",
-        stringSet: [1, 2, 3],
-        key: "C",
+        triadType: DEFAULT_TRIAD_TYPE,
+        stringSet: [...DEFAULT_STRING_SET],
+        key: DEFAULT_KEY,
       };
       return drill;
     }
@@ -61,19 +80,20 @@ export const createDrill = (type: DrillType): Drill => {
       const drill: SpiderDrill = {
         ...base,
         type: "spider",
-        pattern: "1234",
-        fretRange: [1, 4],
+        pattern: DEFAULT_PATTERN,
+        fretRange: DEFAULT_FRET_RANGE,
       };
       return drill;
     }
-    case "generic":
-    default: {
+    case "generic": {
       const drill: GenericDrill = {
         ...base,
         type: "generic",
       };
       return drill;
     }
+    default:
+      return assertNever(type);
   }
 };
 
@@ -97,9 +117,9 @@ export const changeDrillType = (
       const drill: NoteLocationDrill = {
         ...base,
         type: "note-location",
-        string: 1,
-        note: "C",
-        fretRange: [1, 4],
+        string: DEFAULT_STRING,
+        note: DEFAULT_NOTE,
+        fretRange: DEFAULT_FRET_RANGE,
       };
       return drill;
     }
@@ -107,9 +127,9 @@ export const changeDrillType = (
       const drill: TriadLocationDrill = {
         ...base,
         type: "triad-location",
-        triadType: "major",
-        stringSet: [1, 2, 3],
-        key: "C",
+        triadType: DEFAULT_TRIAD_TYPE,
+        stringSet: [...DEFAULT_STRING_SET],
+        key: DEFAULT_KEY,
       };
       return drill;
     }
@@ -117,18 +137,19 @@ export const changeDrillType = (
       const drill: SpiderDrill = {
         ...base,
         type: "spider",
-        pattern: "1234",
-        fretRange: [1, 4],
+        pattern: DEFAULT_PATTERN,
+        fretRange: DEFAULT_FRET_RANGE,
       };
       return drill;
     }
-    case "generic":
-    default: {
+    case "generic": {
       const drill: GenericDrill = {
         ...base,
         type: "generic",
       };
       return drill;
     }
+    default:
+      return assertNever(nextType);
   }
 };
