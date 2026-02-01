@@ -37,6 +37,13 @@ describe("createDrill", () => {
     expect(drill.pattern).toBeTruthy();
     expect(drill.fretRange).toHaveLength(2);
   });
+
+  it("creates fresh fretRange arrays for new spider drills", () => {
+    const a = createDrill("spider");
+    const b = createDrill("spider");
+
+    expect(a.fretRange).not.toBe(b.fretRange);
+  });
 });
 
 describe("changeDrillType", () => {
@@ -98,5 +105,20 @@ describe("changeDrillType", () => {
     expect("triadType" in changed).toBe(false);
     expect("stringSet" in changed).toBe(false);
     expect("key" in changed).toBe(false);
+  });
+
+  it("creates fresh fretRange arrays when switching to spider", () => {
+    const existing: Drill = {
+      id: "drill-901",
+      type: "generic",
+      name: "Base",
+      durationSeconds: 60,
+      metronome: { bpm: 80, beatsPerBar: 4 },
+    };
+
+    const first = changeDrillType(existing, "spider");
+    const second = changeDrillType(existing, "spider");
+
+    expect(first.fretRange).not.toBe(second.fretRange);
   });
 });

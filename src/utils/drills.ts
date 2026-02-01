@@ -33,6 +33,9 @@ const DEFAULT_TRIAD_TYPE: TriadLocationDrill["triadType"] = "major"; // docs/spe
 const DEFAULT_STRING_SET: number[] = [1, 2, 3]; // docs/spec-v1.md does not define default string set
 const DEFAULT_KEY = "C"; // docs/spec-v1.md does not define default key
 
+const defaultFretRange = (): [number, number] =>
+  [...DEFAULT_FRET_RANGE] as [number, number];
+
 const assertNever = (value: never): never => {
   throw new Error(`Unhandled drill type: ${String(value)}`);
 };
@@ -62,7 +65,7 @@ export const createDrill = (type: DrillType): Drill => {
         type: "note-location",
         string: DEFAULT_STRING,
         note: DEFAULT_NOTE,
-        fretRange: DEFAULT_FRET_RANGE,
+        fretRange: defaultFretRange(),
       };
       return drill;
     }
@@ -81,7 +84,7 @@ export const createDrill = (type: DrillType): Drill => {
         ...base,
         type: "spider",
         pattern: DEFAULT_PATTERN,
-        fretRange: DEFAULT_FRET_RANGE,
+        fretRange: defaultFretRange(),
       };
       return drill;
     }
@@ -119,7 +122,7 @@ export const changeDrillType = (
         type: "note-location",
         string: DEFAULT_STRING,
         note: DEFAULT_NOTE,
-        fretRange: DEFAULT_FRET_RANGE,
+        fretRange: defaultFretRange(),
       };
       return drill;
     }
@@ -138,7 +141,7 @@ export const changeDrillType = (
         ...base,
         type: "spider",
         pattern: DEFAULT_PATTERN,
-        fretRange: DEFAULT_FRET_RANGE,
+        fretRange: defaultFretRange(),
       };
       return drill;
     }
